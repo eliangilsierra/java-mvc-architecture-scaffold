@@ -1,6 +1,6 @@
 # java-mvc-architecture-scaffold
 
-Reference scaffold: a classic **layered (MVC) architecture** in Spring Boot, meant to be read as much as run. Dummy domain (product catalog) on purpose — the point is the structure, not the business logic. The [`java17-baseline`](https://github.com/eliangilsierra/java-mvc-architecture-scaffold/tree/java17-baseline) branch holds this same architecture exactly as it was first built, kept alive as a fixed reference point.
+Reference scaffold: a classic **layered (MVC) architecture** in Spring Boot, meant to be read as much as run. Dummy domain (product catalog) on purpose — the point is the structure, not the business logic. The [`java17-baseline`](https://github.com/eliangilsierra/java-mvc-architecture-scaffold/tree/java17-baseline) branch holds this same architecture exactly as it was first built; [`java21-upgrade`](https://github.com/eliangilsierra/java-mvc-architecture-scaffold/tree/java21-upgrade) is this branch's parent — identical `src/`, Maven instead of Gradle. See [ADR-0005](adr/0005-migrate-build-to-gradle.md).
 
 ## Why each folder exists
 
@@ -17,7 +17,7 @@ Reference scaffold: a classic **layered (MVC) architecture** in Spring Boot, mea
 
 ## Stack
 
-- Java 21 · Spring Boot 3.3.5 · Maven
+- Java 21 · Spring Boot 3.3.5 · **Gradle (Kotlin DSL)** — see [ADR-0005](adr/0005-migrate-build-to-gradle.md)
 - Spring Data JPA + H2 in-memory for local dev (see [ADR-0002](adr/0002-h2-in-memory-database.md) for why not MySQL/Postgres) — Testcontainers (real Postgres) for integration tests, see [ADR-0004](adr/0004-testcontainers-for-integration-tests.md)
 - `ProblemDetail` (RFC 7807) error responses — see [ADR-0003](adr/0003-problemdetail-error-responses.md)
 - MapStruct · Bean Validation · springdoc-openapi
@@ -41,11 +41,13 @@ OpenAPI UI: `/swagger-ui.html`. H2 console: `/h2-console` (JDBC URL `jdbc:h2:mem
 
 ## Run locally
 
+Requires a local Gradle install (no wrapper is committed in this branch — see [ADR-0005](adr/0005-migrate-build-to-gradle.md)):
+
 ```bash
-mvn spring-boot:run
+gradle bootRun
 ```
 
-Or with Docker:
+Or with Docker (builds with a pinned `gradle:8.10-jdk21` image, no local Gradle needed):
 
 ```bash
 docker build -t mvc-architecture-scaffold .
@@ -55,7 +57,7 @@ docker run -p 8080:8080 mvc-architecture-scaffold
 ## Tests
 
 ```bash
-mvn test
+gradle test
 ```
 
 - `ProductServiceImplTest` unit-tests the service layer in isolation (mocked repositories, real generated mapper) — no Spring context, no database.
