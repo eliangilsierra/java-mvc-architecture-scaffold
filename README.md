@@ -1,6 +1,6 @@
 # java-mvc-architecture-scaffold
 
-Reference scaffold: a classic **layered (MVC) architecture** in Spring Boot, meant to be read as much as run. Dummy domain (product catalog) on purpose — the point is the structure, not the business logic.
+Reference scaffold: a classic **layered (MVC) architecture** in Spring Boot, meant to be read as much as run. Dummy domain (product catalog) on purpose — the point is the structure, not the business logic. The [`java17-baseline`](https://github.com/eliangilsierra/java-mvc-architecture-scaffold/tree/java17-baseline) branch holds this same architecture exactly as it was first built, kept alive as a fixed reference point.
 
 ## Why each folder exists
 
@@ -17,8 +17,9 @@ Reference scaffold: a classic **layered (MVC) architecture** in Spring Boot, mea
 
 ## Stack
 
-- Java 17 · Spring Boot 3.2.4 · Maven
-- Spring Data JPA + H2 in-memory (see [ADR-0002](adr/0002-h2-in-memory-database.md) for why not MySQL/Postgres)
+- Java 21 · Spring Boot 3.3.5 · Maven
+- Spring Data JPA + H2 in-memory for local dev (see [ADR-0002](adr/0002-h2-in-memory-database.md) for why not MySQL/Postgres) — Testcontainers (real Postgres) for integration tests, see [ADR-0004](adr/0004-testcontainers-for-integration-tests.md)
+- `ProblemDetail` (RFC 7807) error responses — see [ADR-0003](adr/0003-problemdetail-error-responses.md)
 - MapStruct · Bean Validation · springdoc-openapi
 
 ## Endpoints
@@ -57,7 +58,8 @@ docker run -p 8080:8080 mvc-architecture-scaffold
 mvn test
 ```
 
-`ProductServiceImplTest` unit-tests the service layer in isolation (mocked repositories, real generated mapper) — no Spring context, no database.
+- `ProductServiceImplTest` unit-tests the service layer in isolation (mocked repositories, real generated mapper) — no Spring context, no database.
+- `CategoryProductIntegrationTest` exercises the full HTTP flow against a real Postgres (Testcontainers). Requires Docker.
 
 ## Companion repo
 
